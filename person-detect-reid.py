@@ -98,21 +98,6 @@ def main():
                     cv2.imshow('cam'+str(i), images[i])
                 continue
 
-            # Check if the detected objects have already registered in the DB
-            for cam in range(num_cameras):
-                for idx_obj, obj in enumerate(objects[cam]):
-                    min_dist=1e9
-                    min_id=-1
-                    for idx_db ,db in enumerate(feature_db):             # Search for the most similar object in the DB
-                        dist = distance.cosine(obj['feature'], db['feature'])
-                        if dist<min_dist:
-                            min_dist   = dist
-                            min_id     = db['id']
-                            min_idx_db = idx_db
-                    if min_id != -1 and min_dist < dist_threshold:  # if the distance is smaller than the threshold, assign the ID to the object
-                        feature_db[min_idx_db]['time'] = time.time()     # Renew the last used time (extend lifetime of the DB record)
-                        objects[cam][idx_obj]['id'] = min_id
-
             # Create cosine distance matrix and match objects in the frame and the DB
             hangarian = Munkres()
             for cam in range(num_cameras):

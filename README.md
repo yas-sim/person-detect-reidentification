@@ -1,9 +1,9 @@
 # Person / Face detection and Re-identification Demo
 This is a demo program to demonstrate how person or face detection DL model and re-identification model works with [**Intel(r) Distribution of OpenVINO(tm) toolkit**](https://software.intel.com/en-us/openvino-toolkit).  
-This program find the objects such as person or face from multiple images, and then assign ID and match objects in the pictures.
-The demo program suppors multiple camera or movie file inputs (The program should work with more than 2 inputs, haven't tested it though).  
-The re-identification model takes a cropped image of the object and generates a feature vector consists of 256 FP values. This program calculates the cosine distance of those feature vectores of the objects to check the object similarity.  
-The found objects are registered to a database with the created time. The time in the recored will be updated everytime the record is used so that the program can check the elapsed time from the last use. The record will be evicted when the specified time get passed.  
+This program finds the objects such as person or face from the multiple images, then assign ID and match objects in the pictures.
+The demo program suppors multiple camera or movie file inputs (the program should work with more than 2 inputs; haven't tested it though).  
+The re-identification model takes a cropped image of the object and generates a feature vector which consists of 256 FP values. This program calculates the cosine distance of those feature vectores of the objects to check the object similarity.  
+The found objects are registered to a database with the created time. The time in the record will be updated everytime the record is used so that the program can check the elapsed time from the last use. The record will be evicted when the specified time passes.  
 
 [**Intel(r) Distribution of OpenVINO(tm) toolkit**](https://software.intel.com/en-us/openvino-toolkit)を使った人・顔検出＋マッチングデモプログラムです。  
 人検出、顔検出DLモデルを使用して複数の画像から検出したオブジェクトに、re-identificationモデルを使用してマッチング、ID振りを行っています。  

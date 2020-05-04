@@ -6,7 +6,7 @@ The re-identification model takes a cropped image of the object and generates a 
 The found objects are registered to a database with the created time. The time in the record will be updated everytime the record is used so that the program can check the elapsed time from the last use. The record will be evicted when the specified time passes.  
 
 [**Intel(r) Distribution of OpenVINO(tm) toolkit**](https://software.intel.com/en-us/openvino-toolkit)を使った人・顔検出＋マッチングデモプログラムです。  
-人検出、顔検出DLモデルを使用して複数の画像から検出したオブジェクトに、re-identificationモデルを使用してマッチング、ID振りを行っています。  
+人検出、顔検出ディープラーニングモデルを使用して複数の画像から検出したオブジェクトに、re-identificationモデルを使用してマッチング、ID振りを行っています。  
 2つ以上のカメラ、あるいはムービーをサポートすることも可能です（テストしてませんが）  
 Re-identificationモデルは切り出されたオブジェクトのイメージから256個のFP数値からなる特徴ベクトルを生成します。このプログラムでは生成されたベクトル同士のコサイン距離の比較によってオブジェクトの類似度を判定しています。  
 見つかったオブジェクトは時刻とともにデータベースに記録されます。レコードの時間はそのレコードが使用されるたびに更新され、最後に使用された時間がわかるようになっています。使用されないまま指定された時間が経過したオブジェクトはデータベースから除外されます。

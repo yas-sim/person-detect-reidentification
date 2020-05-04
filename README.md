@@ -1,5 +1,5 @@
 # Person / Face detection and Re-identification Demo
-This is a demo program to demonstrate how person or face detection DL model and re-identification model works with Intel(r) Distribution of OpenVINO(tm) toolkit.  
+This is a demo program to demonstrate how person or face detection DL model and re-identification model works with [**Intel(r) Distribution of OpenVINO(tm) toolkit**](https://software.intel.com/en-us/openvino-toolkit).  
 This program find the objects such as person or face from multiple images, and then assign ID and match objects in the pictures.
 The demo program suppors multiple camera or movie file inputs (The progra should work with more than 2 inputs, haven't tested though).  
 The re-identification model takes a cropped image of the object and generates a feature vector consists of 256 FP values. This program calculates the cosine distance of those feature vectores of the objects to check the object similarity.  

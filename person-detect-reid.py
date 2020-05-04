@@ -24,8 +24,8 @@ _C = 1
 _H = 2
 _W = 3
 
-#video_caputure_list = [ 0, 1 ]
-video_caputure_list = [ 'movie1.264', 'movie2.264' ]   # for testing and debugging purpose
+video_caputure_list = [ 0, 1 ]
+#video_caputure_list = [ 'movie1.264', 'movie2.264' ]   # for testing and debugging purpose
 
 def main():
         id_num = 0

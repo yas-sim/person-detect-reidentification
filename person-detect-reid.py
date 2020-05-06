@@ -8,6 +8,13 @@ from scipy.spatial import distance
 from munkres import Munkres
 from openvino.inference_engine import IENetwork, IECore
 
+class object:
+    def __init__(self, pos, feature, id=-1):
+        self.feature = feature
+        self.id = id
+        self.time = time.monotonic()
+        self.pos = pos
+
 # DL models for pedestrian detection and person re-identification
 #model_det  = 'pedestrian-detection-adas-0002'
 #model_reid = 'person-reidentification-retail-0079'
@@ -24,8 +31,8 @@ _C = 1
 _H = 2
 _W = 3
 
-video_caputure_list = [ 0, 1 ]
-#video_caputure_list = [ 'movie1.264', 'movie2.264' ]   # for testing and debugging purpose
+#video_caputure_list = [ 0, 1 ]
+video_caputure_list = [ 'movie1.264', 'movie2.264' ]   # for testing and debugging purpose
 
 def main():
         id_num = 0
@@ -88,7 +95,7 @@ def main():
                         res_reid = exec_net_reid.infer(inputs={input_name_reid: obj_img})            # Run re-identification model to generate feature vectors (256 elem)
                         
                         vec=np.array(res_reid[out_name_reid]).reshape((256))                         # Convert the feature vector to numpy array
-                        objects[cam].append({'coord':[xmin,ymin, xmax,ymax], 'feature':vec, 'id':-1})
+                        objects[cam].append(object([xmin,ymin, xmax,ymax], vec))
 
             total_objects=0
             for obj in objects:
@@ -102,38 +109,39 @@ def main():
             hangarian = Munkres()
             for cam in range(num_cameras):
                 if len(feature_db)==0 or len(objects[cam])==0: continue
-                dist_matrix = [ [ distance.cosine(obj_db['feature'], obj_cam['feature']) 
+                dist_matrix = [ [ distance.cosine(obj_db.feature, obj_cam.feature) 
                             for obj_db in feature_db ] for obj_cam in objects[cam] ]
                 combination = hangarian.compute(dist_matrix)        # Solve matching problem
 
                 for idx_obj, idx_db in combination:
-                    if objects[cam][idx_obj]['id']!=-1:             # This object has already been assigned an ID
+                    if objects[cam][idx_obj].id!=-1:             # This object has already been assigned an ID
                         continue
-                    dist = distance.cosine(objects[cam][idx_obj]['feature'], feature_db[idx_db]['feature'])
+                    dist = distance.cosine(objects[cam][idx_obj].feature, feature_db[idx_db].feature)
                     if dist < dist_threshold:
-                        feature_db[idx_db]['time'] = time.time()    # Renew the last used time (extend lifetime of the DB record)
-                        objects[cam][idx_obj]['id'] = feature_db[idx_db]['id']
+                        feature_db[idx_db].time = time.monotonic()    # Renew the last used time (extend lifetime of the DB record)
+                        objects[cam][idx_obj].id = feature_db[idx_db].id
             del hangarian
 
             # Register remaining ID unassigned objects to the DB (They are considered as the new objects)
             for cam in range(num_cameras):
                 for obj in objects[cam]:
-                    if obj['id'] == -1:
-                        feature_db.append({'id':id_num, 'feature':obj['feature'], 'time': time.time()})
+                    if obj.id == -1:
+                        obj.id=id_num
+                        feature_db.append(obj)
                         id_num+=1
 
             # Check for timeout items in the DB and delete them
             for i, db in enumerate(feature_db):
-                if time.time() - db['time'] > timeout_threshold:
-                    print('discarded id #{}'.format(db['id']))
+                if time.monotonic() - db.time > timeout_threshold:
+                    print('discarded id #{}'.format(db.id))
                     feature_db.pop(i)
 
             # Draw bounding boxes and IDs
             for camera in range(num_cameras):
                 for obj in objects[camera]:
-                    id = obj["id"]
+                    id = obj.id
                     color = ( (((~id)<<6) & 0x100)-1, (((~id)<<7) & 0x0100)-1, (((~id)<<8) & 0x0100)-1 )
-                    xmin, ymin, xmax, ymax = obj['coord']
+                    xmin, ymin, xmax, ymax = obj.pos
                     cv2.rectangle(images[camera], (xmin, ymin), (xmax, ymax), color, 2)
                     cv2.putText(images[camera], str(id), (xmin, ymin - 7), cv2.FONT_HERSHEY_COMPLEX, 1.0, color, 1)
                 cv2.imshow('cam'+str(camera), images[camera])

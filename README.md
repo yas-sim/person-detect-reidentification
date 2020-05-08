@@ -1,18 +1,20 @@
 # Person / Face Detection and Re-identification Demo
 This is a demo program to demonstrate how person or face detection DL model and re-identification model works with [**Intel(r) Distribution of OpenVINO(tm) toolkit**](https://software.intel.com/en-us/openvino-toolkit).  
 This program finds the objects such as person or face from the multiple images, then assign ID and match objects in the pictures.
-The demo program suppors multiple camera or movie file inputs (the program should work with more than 2 inputs; haven't tested it though).  
+The demo program suppors multiple camera or movie file inputs (the program should work with more than 2 inputs).  
 The re-identification model takes a cropped image of the object and generates a feature vector which consists of 256 FP values. This program calculates the cosine distance of those feature vectores of the objects to check the object similarity.  
 The found objects are registered to a database with the created time. The time in the record will be updated everytime the record is used so that the program can check the elapsed time from the last use. The record will be evicted when the specified time passes.  
 
 [**Intel(r) Distribution of OpenVINO(tm) toolkit**](https://software.intel.com/en-us/openvino-toolkit)を使った人・顔検出＋マッチングデモプログラムです。  
 人検出、顔検出ディープラーニングモデルを使用して複数の画像から検出したオブジェクトに、re-identificationモデルを使用してマッチング、ID振りを行っています。  
-2つ以上のカメラ、あるいはムービーをサポートすることも可能です（テストしてませんが）  
+2つ以上のカメラ、あるいはムービーをサポートすることも可能です。  
 Re-identificationモデルは切り出されたオブジェクトのイメージから256個のFP数値からなる特徴ベクトルを生成します。このプログラムでは生成されたベクトル同士のコサイン距離の比較によってオブジェクトの類似度を判定しています。  
 見つかったオブジェクトは時刻とともにデータベースに記録されます。レコードの時刻はそのレコードが使用されるたびに更新され、最後に使用された時刻がわかるようになっています。使用されないまま指定された時間が経過したレコードはデータベースから除外されます。
 
 ![Detection and Re-ID](./resources/reid.gif)  
 
+**You can track people in the images sent from multiple cameras**
+![track-face](./resources/track-face.gif)
 
 ### Required DL Models to Run This Demo
 
